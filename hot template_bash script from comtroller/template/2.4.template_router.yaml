@@ -1,0 +1,42 @@
+heat_template_version: '2015-10-15'
+description: >
+  HOT template that just defines a router
+  
+parameters:
+  router_name:
+    type: string
+    label: the router name 
+    description: the router name 
+  network_name:
+    type: string
+    label: the network name 
+    description: the network name 
+  network_cidr:
+    type: string
+    label: Private network address (CIDR notation)
+    description: the network cidr should be in the address format like 192.168.1.0/24 
+
+resources:
+  net_1:
+    type: OS::Neutron::Net
+    properties:
+      name: {get_param: network_name}
+
+  net_1_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: net_1 }
+      cidr: {get_param: network_cidr }
+#      cidr: "10.10.0.0/24"
+      dns_nameservers: [ "8.8.8.8", "8.8.4.4" ]
+      ip_version: 4
+  router_1:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info: { network: admin_floating_net }
+      name: {get_param: router_name}
+  internal_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router_1 }
+      subnet: { get_resource: net_1_subnet }

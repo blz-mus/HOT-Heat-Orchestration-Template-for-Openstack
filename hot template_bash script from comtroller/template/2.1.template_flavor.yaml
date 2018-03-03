@@ -1,0 +1,15 @@
+heat_template_version: '2015-10-15'
+
+description: >
+  Simple template to deploy a Flavor with:
+  disk: 1 Go, ram: 100 Mo, vcpus: 1
+   
+
+resources:
+  flavor0:
+    type: OS::Nova::Flavor
+    properties:
+      disk: 1
+#      is_public: true
+      ram: 100
+      vcpus: 1

@@ -1,0 +1,40 @@
+#description: Simple template to deploy a single compute instance
+heat_template_version: '2015-10-15'
+
+description: >
+  HOT template that just defines a single server.
+  Contains just base features to verify base HOT support.
+  connected to internal newtork 
+
+parameters:
+  image:
+    type: string
+    description: Image ID or image name to use for the server
+  flavor:
+    type: string
+    description: Flavor for the server to be created
+  key:
+    type: string
+    description: Name of an existing key pair to use for the server
+
+resources:
+  server_1:
+    type: OS::Nova::Server
+    properties:
+      name: server_1
+      key_name: { get_param: key }
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      networks:
+        - port: {get_resource: server1_port1}
+  server1_port1:
+    type: OS::Neutron::Port
+    properties:
+      network_id: admin_internal_net
+      security_groups: 
+        - default
+
+#outputs:
+#  server_networks:
+#    description: The networks of the deployed server
+#    value: { get_attr: [server_1, networks] }

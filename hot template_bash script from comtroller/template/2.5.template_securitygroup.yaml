@@ -1,0 +1,32 @@
+heat_template_version: '2015-10-15'
+
+description: >
+  Simple template to deploy a security group
+
+parameters:
+  security_group_name:
+    type: string
+    description: Name of seurity group
+  protocol:
+    type: string
+    description: the protocol name
+  port_range_min:
+    type: number
+    description: port range max is a number
+  port_range_max:
+    type: string
+    description: port range max is a number
+
+resources:
+  security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: Add security group rules for server
+      name: { get_param: security_group_name }
+      rules:
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: { get_param: protocol }
+          port_range_min: { get_param: port_range_min }
+          port_range_max: { get_param: port_range_max }
+
+
